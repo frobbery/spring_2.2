@@ -1,0 +1,9 @@
+1711291001674:help
+1711291006502:all
+1711292480003:a -newBook
+1711292490092:a --bookName newBook
+1711292613280:add --bookName newBook
+1711292892758:a --bookName newBook
+1711293275237:help
+1711293346508:u -bookId 15 --bookName newName --authorFullName Duma --genreNames Romance Adventure
+1711293395977:u --bookId 15 --bookName newName --authorFullName Duma --genreNames Romance Adventure

@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert into book_genre, comments
+      author: yupuzina
+      changes:
+        - loadUpdateData:
+            primaryKey: "book_id,genre_id"
+            file: data/books_genres.csv
+            relativeToChangelogFile: true
+            separator: ;
+            encoding: UTF-8
+            tableName: book_genre
+
+        - loadUpdateData:
+              primaryKey: id
+              file: data/comments.csv
+              relativeToChangelogFile: true
+              separator: ;
+              encoding: UTF-8
+              tableName: comment
