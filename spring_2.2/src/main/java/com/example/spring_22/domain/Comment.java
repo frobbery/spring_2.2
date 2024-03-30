@@ -20,7 +20,7 @@ public class Comment {
     @Column(name = "comment_text")
     private String text;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
 

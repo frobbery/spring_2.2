@@ -7,3 +7,6 @@
 1711293275237:help
 1711293346508:u -bookId 15 --bookName newName --authorFullName Duma --genreNames Romance Adventure
 1711293395977:u --bookId 15 --bookName newName --authorFullName Duma --genreNames Romance Adventure
+1711723147479:a
+1711723150864:all
+1711723300954:c --bookId 1

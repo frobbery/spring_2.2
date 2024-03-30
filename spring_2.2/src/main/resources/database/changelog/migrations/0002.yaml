@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: insert into books, authors, genres and comments
+      id: insert into authors
       author: yupuzina
       changes:
         - loadUpdateData:

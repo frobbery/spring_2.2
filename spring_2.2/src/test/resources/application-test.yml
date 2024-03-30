@@ -1,12 +1,20 @@
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
+
   shell:
     interactive:
       enabled: false
 
+  liquibase:
+    enabled: false
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
   sql:
     init:
-      mode: always
-      continue-on-error: on
       data-locations: data.sql
+      mode: always
+      continue-on-error: true

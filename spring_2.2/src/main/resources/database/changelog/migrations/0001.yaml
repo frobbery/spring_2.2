@@ -4,6 +4,7 @@ databaseChangeLog:
     author: yupuzina
     changes:
       - createTable:
+          ifNotExists: true
           tableName: author
           columns:
             - column:
@@ -20,6 +21,7 @@ databaseChangeLog:
                   nullable: false
 
       - createTable:
+          ifNotExists: true
           tableName: genre
           columns:
             - column:
@@ -36,6 +38,7 @@ databaseChangeLog:
                   nullable: false
 
       - createTable:
+          ifNotExists: true
           tableName: book
           columns:
             - column:
@@ -61,6 +64,7 @@ databaseChangeLog:
           constraintName: fk_book_author_id
 
       - createTable:
+          ifNotExists: true
           tableName: comment
           columns:
             - column:
@@ -86,6 +90,7 @@ databaseChangeLog:
           constraintName: fk_comment_book_id
 
       - createTable:
+          ifNotExists: true
           tableName: book_genre
           columns:
             - column:

@@ -51,9 +51,6 @@ public class Book {
         if (nonNull(genres)) {
             sb.append(", genres=").append(genres);
         }
-        if (nonNull(comments)) {
-            sb.append(", comments=").append(comments);
-        }
         sb.append("}");
         return sb.toString();
     }

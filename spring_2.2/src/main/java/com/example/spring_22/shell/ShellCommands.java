@@ -3,6 +3,7 @@ package com.example.spring_22.shell;
 
 import com.example.spring_22.domain.Author;
 import com.example.spring_22.domain.Book;
+import com.example.spring_22.domain.Comment;
 import com.example.spring_22.domain.Genre;
 import com.example.spring_22.services.book.BookService;
 import com.example.spring_22.services.comment.CommentService;
@@ -113,25 +114,38 @@ public class ShellCommands {
     @ShellMethod(value = "Add comment", key = {"ac"})
     @CatchAndWrite
     @Transactional
-    public void addCommentToBook(@ShellOption String commentText, @ShellOption(defaultValue = "__NULL__") Long bookId,) {
-        List<Genre> genres = new ArrayList<>();
-        Book bookToBeSaved = Book.builder()
-                .name(bookName)
-                .build();
-        if (nonNull(genreNames)) {
-            for (String genreName : genreNames) {
-                genres.add(Genre.builder()
-                        .genreName(genreName)
-                        .build());
-            }
-            bookToBeSaved.setGenres(genres);
-        }
-        if (nonNull(authorFullName)) {
-            bookToBeSaved.setAuthor(Author.builder()
-                    .fullName(authorFullName)
-                    .build());
-        }
-        long savedBookId = bookService.saveBook(bookToBeSaved);
-        System.out.println("Saved book id : " + savedBookId);
+    public void addCommentToBook(@ShellOption String commentText, @ShellOption Long bookId) {
+        long savedCommentId = commentService.addCommentToBook(Comment.builder()
+                .book(Book.builder()
+                        .id(bookId)
+                        .build())
+                .build());
+        System.out.println("Saved comment id : " + savedCommentId);
+    }
+
+    @ShellMethod(value = "Get all comments by book id", key = {"c"})
+    @CatchAndWrite
+    @Transactional
+    public void getAllCommentsByBookId(@ShellOption Long bookId) {
+        var comments = commentService.getAllCommentsOfBook(bookId);
+        System.out.println("Comments are : " + comments.stream()
+                .map(Comment::toString)
+                .collect(Collectors.joining("\n")));
+    }
+
+    @ShellMethod(value = "Delete comment by id", key = {"dc"})
+    @CatchAndWrite
+    @Transactional
+    public void deleteCommentById(@ShellOption Long commentId) {
+        commentService.deleteCommentById(commentId);
+        System.out.println(MessageFormat.format("Comment by id {0} is deleted", commentId));
+    }
+
+    @ShellMethod(value = "Update comment text by id", key = {"uc"})
+    @CatchAndWrite
+    @Transactional
+    public void updateCommentTextById(@ShellOption Long commentId, @ShellOption(defaultValue = "__NULL__") String newText) {
+        commentService.updateCommentTextById(commentId, newText);
+        System.out.println(MessageFormat.format("Comment by id {0} is updated", commentId));
     }
 }
