@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,10 +85,13 @@ public class BookRepositoryJpa implements BookRepository{
 
     @Override
     public void deleteBookGenreLinks(long bookId) {
-        Query query = entityManager.createQuery("update Book b " +
-                "set b.genres = :emptyList ");
-        query.setParameter("emptyList", List.of());
-        query.executeUpdate();
+        Optional<Book> bookOptional = findById(bookId);
+        if (bookOptional.isEmpty()) {
+            throw new IllegalArgumentException("There is no book with such id");
+        }
+        Book book = bookOptional.get();
+        book.setGenres(new ArrayList<>());
+        entityManager.merge(book);
     }
 
     @Override
@@ -97,7 +101,7 @@ public class BookRepositoryJpa implements BookRepository{
             throw new IllegalArgumentException("There is no book with such id");
         }
         Book book = bookOptional.get();
-        book.getGenres().add(genre);
+        book.getGenres().remove(genre);
         entityManager.merge(book);
     }
 }

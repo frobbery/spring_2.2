@@ -1,7 +1,7 @@
-package com.example.spring_22.dao.author;
+package com.example.spring_22.dao.genre;
 
 import com.example.spring_22.config.YamlPropertySourceFactory;
-import com.example.spring_22.domain.Author;
+import com.example.spring_22.domain.Genre;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,49 +12,49 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("Dao для работы с авторами должно:")
+@DisplayName("Dao для работы с жанрами должно:")
 @DataJpaTest
-@Import(AuthorRepositoryJpa.class)
+@Import(GenreRepositoryJpa.class)
 @TestPropertySource(value = "/application-test.yml", factory = YamlPropertySourceFactory.class)
 @Sql(value = "classpath:data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-class AuthorRepositoryJpaTest {
+class GenreRepositoryJpaTest {
 
     @Autowired
-    private AuthorRepositoryJpa sut;
+    private GenreRepositoryJpa sut;
 
     @Test
-    @DisplayName("Возврашать автора по полному имени")
-    void shouldGetByFullname() {
+    @DisplayName("Возврашать жанр по названию")
+    void shouldGetGenreByName() {
         //given
-        var expectedAuthor = Author.builder()
+        var expectedGenre = Genre.builder()
                 .id(1L)
-                .fullName("Pushkin")
+                .genreName("Adventure")
                 .build();
 
         //when
-        var actualAuthor = sut.getByFullName(expectedAuthor.getFullName());
+        var actualGenre = sut.getByName(expectedGenre.getGenreName());
 
         //then
-        assertThat(actualAuthor)
+        assertThat(actualGenre)
                 .isNotEmpty()
-                .contains(expectedAuthor);
+                .contains(expectedGenre);
     }
 
     @Test
-    @DisplayName("Сохранять автора")
-    void shouldSaveNewAuthor() {
+    @DisplayName("Сохранять жанр")
+    void shouldSaveNewGenre() {
         //given
-        var expectedAuthor = Author.builder()
+        var expectedGenre = Genre.builder()
                 .id(3L)
-                .fullName("New")
+                .genreName("New")
                 .build();
 
         //when
-        var actualAuthor = sut.save(expectedAuthor);
+        var actualGenre = sut.save(expectedGenre);
 
         //then
-        assertThat(actualAuthor)
+        assertThat(actualGenre)
                 .usingRecursiveComparison()
-                .isEqualTo(expectedAuthor);
+                .isEqualTo(expectedGenre);
     }
 }

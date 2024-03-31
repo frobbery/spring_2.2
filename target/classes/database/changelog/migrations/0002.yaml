@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert into authors
+      author: yupuzina
+      changes:
+        - loadUpdateData:
+            primaryKey: id
+            file: data/authors.csv
+            relativeToChangelogFile: true
+            separator: ;
+            encoding: UTF-8
+            tableName: author

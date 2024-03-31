@@ -31,7 +31,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public long saveBook(Book book) {
-        var bookId = bookRepository.save(book).getId();
+        var bookId = bookRepository.save(Book.builder().name(book.getName()).build()).getId();
         var authorId = authorService.saveAuthorIfNotExists(book.getAuthor());
         bookRepository.updateAuthor(bookId, authorId);
         saveGenres(bookId, book.getGenres());
@@ -66,7 +66,8 @@ public class BookServiceImpl implements BookService {
             throw new IllegalArgumentException("There is no book with such id");
         }
         var oldBook = oldBookOptional.get();
-        if (oldBook.getName().equals(newBook.getName())) {
+        if ((nonNull(oldBook.getName()) && !oldBook.getName().equals(newBook.getName())) ||
+                (isNull(oldBook.getName()) && nonNull(newBook.getName()))) {
             bookRepository.updateNameById(newBook.getId(), newBook.getName());
         }
         if ((nonNull(oldBook.getAuthor()) &&

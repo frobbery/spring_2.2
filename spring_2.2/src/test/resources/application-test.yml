@@ -1,7 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-
   shell:
     interactive:
       enabled: false
@@ -16,5 +13,5 @@ spring:
   sql:
     init:
       data-locations: data.sql
-      mode: always
+      mode: embedded
       continue-on-error: true
