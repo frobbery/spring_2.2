@@ -31,7 +31,8 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public long saveBook(Book book) {
-        var bookId = bookRepository.save(Book.builder().name(book.getName()).build()).getId();
+        var bookToSaveInRepository = Book.builder().name(book.getName()).build();
+        var bookId = bookRepository.save(bookToSaveInRepository).getId();
         var authorId = authorService.saveAuthorIfNotExists(book.getAuthor());
         bookRepository.updateAuthor(bookId, authorId);
         saveGenres(bookId, book.getGenres());
@@ -66,12 +67,12 @@ public class BookServiceImpl implements BookService {
             throw new IllegalArgumentException("There is no book with such id");
         }
         var oldBook = oldBookOptional.get();
-        if ((nonNull(oldBook.getName()) && !oldBook.getName().equals(newBook.getName())) ||
+        if ((nonNull(oldBook.getName()) && (isNull(newBook.getName()) || !oldBook.getName().equals(newBook.getName()))) ||
                 (isNull(oldBook.getName()) && nonNull(newBook.getName()))) {
             bookRepository.updateNameById(newBook.getId(), newBook.getName());
         }
         if ((nonNull(oldBook.getAuthor()) &&
-                (isNull(newBook.getAuthor()) || oldBook.getAuthor().getFullName().equals(newBook.getAuthor().getFullName())))
+                (isNull(newBook.getAuthor()) || !oldBook.getAuthor().getFullName().equals(newBook.getAuthor().getFullName())))
                 || (isNull(oldBook.getAuthor()) && nonNull(newBook.getAuthor()))) {
             Author author;
             if (isNull(newBook.getAuthor())) {

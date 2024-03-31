@@ -2,7 +2,7 @@ package com.example.spring_22.services.comment;
 
 import com.example.spring_22.dao.comment.CommentRepository;
 import com.example.spring_22.domain.Comment;
-import com.example.spring_22.services.book.BookServiceImpl;
+import com.example.spring_22.services.book.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
 
-    private final BookServiceImpl bookService;
+    private final BookService bookService;
 
     @Override
     @Transactional

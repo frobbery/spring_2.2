@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -44,24 +45,29 @@ class BookServiceImplTest {
     @DisplayName("Должен сохранять книгу")
     void shouldSaveBook() {
         //given
+        var bookToBeSaved = Book.builder()
+                .name("name")
+                .build();
         var author = Author.builder()
                 .fullName("fullName");
         var genre = Genre.builder()
                 .genreName("genreName");
         var bookFromDao = Book.builder()
-                .name("name");
+                .id(1L)
+                .name("name")
+                .build();
         var authorFromService = author
                 .id(2L)
                 .build();
         var genreFromService = genre
                 .id(3L)
                 .build();
-        var savedBookId = 1L;
-        var book = bookFromDao
+        var book = Book.builder()
+                .name("name")
                 .author(author.build())
                 .genres(List.of(genre.build()))
                 .build();
-        when(bookRepository.save(bookFromDao.build())).thenReturn(bookFromDao.id(savedBookId).build());
+        when(bookRepository.save(bookToBeSaved)).thenReturn(bookFromDao);
         when(authorService.saveAuthorIfNotExists(author.build())).thenReturn(authorFromService);
         when(genreService.saveGenreIfNotExists(genre.build())).thenReturn(genreFromService);
 
@@ -69,9 +75,9 @@ class BookServiceImplTest {
         var result = sut.saveBook(book);
 
         //then
-        assertEquals(savedBookId, result);
-        verify(bookRepository, times(1)).updateAuthor(savedBookId, authorFromService);
-        verify(bookRepository, times(1)).addGenreToBook(savedBookId, genreFromService);
+        assertEquals(bookFromDao.getId(), result);
+        verify(bookRepository, times(1)).updateAuthor(bookFromDao.getId(), authorFromService);
+        verify(bookRepository, times(1)).addGenreToBook(bookFromDao.getId(), genreFromService);
     }
 
     @Test
@@ -153,14 +159,17 @@ class BookServiceImplTest {
                 .genres(List.of())
                 .build();
         when(bookRepository.findById(expectedBook.getId())).thenReturn(Optional.of(bookBefore));
+        if (nonNull(newAuthor)) {
+            when(authorService.saveAuthorIfNotExists(newAuthor)).thenReturn(newAuthor);
+        }
 
         //when
         sut.updateBookById(expectedBook);
 
         //then
         verify(bookRepository, times(1)).updateNameById(expectedBook.getId(), expectedBook.getName());
-        //verify(bookRepository, times(1)).updateAuthor(expectedBook.getId(), newAuthor);
-        //verify(bookRepository, times(1)).deleteBookGenreLinks(expectedBook.getId());
+        verify(bookRepository, times(1)).updateAuthor(expectedBook.getId(), newAuthor);
+        verify(bookRepository, times(1)).deleteBookGenreLinks(expectedBook.getId());
     }
 
     private static Stream<Arguments> getAuthorsAndNamesCombinations() {
